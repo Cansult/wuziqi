@@ -1,18 +1,18 @@
 package com.cansult.wuziqi;
 
 import java.awt.Graphics;
-
 import javax.swing.JFrame;
 
 public class GameUI {
 	
-	public static final int dChessman = 40, numLine = 10, dCtC = 50, oX = 50, oY = 50;
+	public final int dChessman = 40, numLine = 10, dCtC = 50, oX = 50, oY = 50;
+	public static Client wbc;
 
 	public void showUI() {
 //窗体
 		JFrame jf = new JFrame();
 		jf.setSize(1000, 1000);
-		jf.setTitle("五子棋游戏");
+		jf.setTitle("五子棋");
 //居中显示
 		jf.setLocationRelativeTo(null);
 //退出进程
@@ -22,8 +22,10 @@ public class GameUI {
 		jf.setVisible(true);
 
 		Graphics g = jf.getGraphics();
+		
+		int blackWhite = wbc.readMsg();
 
-		GameMouse mouse = new GameMouse(g, dChessman, dCtC, numLine, oX, oY);
+		GameMouse mouse = new GameMouse(wbc, g, dChessman, dCtC, numLine, oX, oY, blackWhite);
 		jf.addMouseListener(mouse);
 
 		try {
@@ -41,6 +43,12 @@ public class GameUI {
 
 //主函数
 	public static void main(String[] args) {
+		try {
+			wbc = new Client();
+			wbc.connect("127.0.0.1", 8888);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		GameUI ui = new GameUI();
 		ui.showUI();
 
