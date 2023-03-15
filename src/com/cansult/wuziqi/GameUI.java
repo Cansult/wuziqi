@@ -45,7 +45,7 @@ public class GameUI {
 	public static void main(String[] args) {
 		try {
 			wbc = new Client();
-			wbc.connect("127.0.0.1", 8888);
+			wbc.connect("127.0.0.1", 9999);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

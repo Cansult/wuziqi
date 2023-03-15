@@ -16,16 +16,6 @@ public class Client {
 		is = socket.getInputStream();
 		os = socket.getOutputStream();
 
-		//读取服务器发来的信息
-		// byte[] b = new byte[1024];
-		// is.read(b);
-		//
-		// String msg = new String(b);
-		// System.out.println("服务器说："+msg.trim());
-
-//		while(true) {
-//			readMsg(is);
-//		}
 	}
 	public int readMsg() {
 		int x = 0;
