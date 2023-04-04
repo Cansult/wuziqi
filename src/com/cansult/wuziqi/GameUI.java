@@ -1,14 +1,15 @@
 package com.cansult.wuziqi;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JFrame;
 
 public class GameUI {
 	
-	public final int dChessman = 40, numLine = 10, dCtC = 50, oX = 50, oY = 50;
+	public static final int dChessman = 40, numLine = 10, dCtC = 50, oX = 50, oY = 50;
 	public static Client wbc;
 
-	public void showUI() {
+	public static void main(String[] args) {
 //窗体
 		JFrame jf = new JFrame();
 		jf.setSize(1000, 1000);
@@ -23,35 +24,41 @@ public class GameUI {
 
 		Graphics g = jf.getGraphics();
 		
-		int blackWhite = wbc.readMsg();
-
-		GameMouse mouse = new GameMouse(wbc, g, dChessman, dCtC, numLine, oX, oY, blackWhite);
-		jf.addMouseListener(mouse);
-
+		try {
+			wbc = new Client();
+			wbc.connect("localhost", 8088);
+			System.out.println("Success");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
+		g.setColor(Color.black);
+		
 		for (int i = 0; i <= numLine; i++)
 			g.drawLine(oX, oY + i * dCtC, oX + numLine * dCtC, oY + i * dCtC);
 		
 		for (int i = 0; i <= numLine; i++)
 			g.drawLine(oX + i * dCtC, oY, oX + i * dCtC, oY + numLine * dCtC);
-	}
-
-//主函数
-	public static void main(String[] args) {
-		try {
-			wbc = new Client();
-			wbc.connect("127.0.0.1", 9999);
-		} catch (Exception e) {
-			e.printStackTrace();
+		
+		int blackWhite = wbc.readMsg();
+		
+		System.out.println(blackWhite);
+		
+		if (blackWhite == 1) {
+			int x = wbc.readMsg(), y = wbc.readMsg();
+			g.fillOval(x, y, dChessman, dChessman);
 		}
-		GameUI ui = new GameUI();
-		ui.showUI();
 
+		GameMouse mouse = new GameMouse(wbc, g, dChessman, dCtC, numLine, oX, oY, blackWhite);
+		jf.addMouseListener(mouse);
+
+		
 	}
 
 }

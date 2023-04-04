@@ -68,7 +68,7 @@ public class GameMouse implements MouseListener {
 		if (leX <= numLine && leY <= numLine && leX >= 0 && leY >= 0) {
 			wbc.sendMsg(leX);
 			wbc.sendMsg(leY);
-			if (wbc.readMsg() == 1) {
+			if (wbc.readMsg() == 3) {
 				gr.fillOval(leX * dCtC + oX - dChessman / 2, leY * dCtC + oY - dChessman / 2, dChessman, dChessman);
 				
 				if (ifVic()) return ;
