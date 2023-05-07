@@ -7,16 +7,18 @@ import java.net.Socket;
 
 public class Client {
 	
+	Socket socket;
 	InputStream is;
 	OutputStream os;
 	public void connect(String ip, int port) throws Exception {
-		Socket socket = new Socket(ip, port);
+		socket = new Socket(ip, port);
 
 		//获取流
 		is = socket.getInputStream();
 		os = socket.getOutputStream();
 
 	}
+	
 	public int readMsg() {
 		int x = 0;
 		try {
@@ -26,6 +28,7 @@ public class Client {
 		}
 		return x;
 	}
+	
 	public void sendMsg(int x) {
 		try {
 			os.write(x);
@@ -33,5 +36,9 @@ public class Client {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void finalize() throws Exception {
+		socket.close();
 	}
 }

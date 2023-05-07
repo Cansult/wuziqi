@@ -2,35 +2,39 @@ package com.cansult.wuziqi;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Font;
 import javax.swing.JFrame;
 
 public class GameUI {
 	
-	public static final int dChessman = 40, numLine = 10, dCtC = 50, oX = 50, oY = 50;
-	public static Client wbc;
-
-	public static void main(String[] args) {
+	private int dChessman, numLine, dCtC, oX, oY, windowSize;
+	private JFrame gameWindow;
+	private Graphics pen;
+	
+	GameUI(int dc, int nl, int dt, int o, int ws, GameMouse gm) {
+		dChessman = dc;
+		numLine = nl;
+		dCtC = dt;
+		oX = oY = o;
+		windowSize = ws;
+		gameWindow = new JFrame();
+		gameWindow.addMouseListener(gm);
+		
+	}
+	void init() {
 //窗体
-		JFrame jf = new JFrame();
-		jf.setSize(1000, 1000);
-		jf.setTitle("五子棋");
+		gameWindow.setSize(windowSize, windowSize);
+		gameWindow.setTitle("五子棋");
 //居中显示
-		jf.setLocationRelativeTo(null);
+		gameWindow.setLocationRelativeTo(null);
 //退出进程
-		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 //设置可见
-		jf.setVisible(true);
+		gameWindow.setVisible(true);
 
-		Graphics g = jf.getGraphics();
-		
-		try {
-			wbc = new Client();
-			wbc.connect("localhost", 8088);
-			System.out.println("Success");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		pen = gameWindow.getGraphics();
+		pen.setColor(Color.black);
 		
 		try {
 			Thread.sleep(100);
@@ -38,27 +42,42 @@ public class GameUI {
 			e.printStackTrace();
 		}
 		
-		g.setColor(Color.black);
+		for (int i = 0; i <= numLine; i++)
+			pen.drawLine(oX, oY + i * dCtC, oX + numLine * dCtC, oY + i * dCtC);
 		
 		for (int i = 0; i <= numLine; i++)
-			g.drawLine(oX, oY + i * dCtC, oX + numLine * dCtC, oY + i * dCtC);
-		
-		for (int i = 0; i <= numLine; i++)
-			g.drawLine(oX + i * dCtC, oY, oX + i * dCtC, oY + numLine * dCtC);
-		
-		int blackWhite = wbc.readMsg();
-		
-		System.out.println(blackWhite);
-		
-		if (blackWhite == 1) {
-			int x = wbc.readMsg(), y = wbc.readMsg();
-			g.fillOval(x, y, dChessman, dChessman);
-		}
-
-		GameMouse mouse = new GameMouse(wbc, g, dChessman, dCtC, numLine, oX, oY, blackWhite);
-		jf.addMouseListener(mouse);
-
-		
+			pen.drawLine(oX + i * dCtC, oY, oX + i * dCtC, oY + numLine * dCtC);
 	}
+	
+	int trueX(int x) {
+		int reX = (x - oX) / dCtC;
+		if (Math.abs(reX * dCtC + oX - x) > Math.abs((reX + 1) * dCtC + oX - x))
+			++reX;
+		if (reX <= numLine && reX >= 0)
+			return reX;
+		return -1;
+	}
+	
+	int trueY(int y) {
+		int reY = (y - oY) / dCtC;
+		if (Math.abs(reY * dCtC + oY - y) > Math.abs((reY + 1) * dCtC + oY - y))
+			++reY;
+		if (reY <= numLine && reY >= 0)
+			return reY;
+		return -1;
+	}
+	
+	void drawChessman(int x, int y, int color) {
+		if (color == 0) pen.setColor(Color.black);
+		if (color == 1)	pen.setColor(Color.white);
+		pen.fillOval(x * dCtC + oX - dChessman / 2, y * dCtC + oY - dChessman / 2, dChessman, dChessman);
+	}
+	
+	void win(int x) {
+		Font font = new Font("华文行楷", Font.BOLD, 26); // 创建字体对象
+        pen.setFont(font); // 设置字体
+		if (x == 1) pen.drawString("White Wins", 800, 800);
+		else if (x == 0) pen.drawString("Black Wins", 800, 800);
 
+	}
 }
