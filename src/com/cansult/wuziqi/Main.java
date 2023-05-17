@@ -13,9 +13,7 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws Exception{
-		bool hasClick = new bool();
-		hasClick.ok = false;
-		gameMouse = new GameMouse(hasClick);
+		gameMouse = new GameMouse();
 //窗体
 		gameWindow = new GameUI(dChessman, numLine, dCtC, oX, windowSize, gameMouse);
 		gameWindow.init();
@@ -33,17 +31,18 @@ public class Main {
 		for (int i = 0; ; i++) {
 			int x, y;
 			if (i % 2 == blackWhite) {
-				hasClick.ok = false;
+				gameMouse.hasClick = false;
 				while (true) {
 					Thread.sleep(100);
 					
-					if (hasClick.ok) {
+					if (gameMouse.hasClick) {
 						x = gameWindow.trueX(gameMouse.x);
 						y = gameWindow.trueY(gameMouse.y);
 						wbc.sendMsg(x);
 						wbc.sendMsg(y);
 						System.out.println(x + " " + y);
 						
+						gameMouse.hasClick = false;
 						if (wbc.readMsg() == 1)
 							break;
 					}

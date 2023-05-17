@@ -6,17 +6,17 @@ import java.awt.event.MouseListener;
 
 public class GameMouse implements MouseListener {
 
-	bool hasClick;
+	boolean hasClick;
 	int x, y;
 	
-	GameMouse(bool cb) {
-		hasClick = cb;
+	GameMouse() {
+		hasClick = false;
 	}
 	public void mouseClicked(MouseEvent e) {
 		System.out.println("点击");
 		x = e.getX();
 		y = e.getY();
-		hasClick.ok = true;
+		hasClick = true;
 	}
 
 	public void mousePressed(MouseEvent e) {
